@@ -1,0 +1,23 @@
+[tool_alias]
+docker-credential-pass = 'github:docker/docker-credential-helpers[asset_pattern="docker-credentials-pass-*"]'
+docker-credential-secretservice = 'github:docker/docker-credential-helpers[asset_pattern="docker-credential-secretservice-*"]'
+guest-init = "github:jingkaihe/matchlock"
+
+[tools.docker-credential-pass]
+version = "0.9.3"
+platforms.linux-x64 = { asset_pattern = "docker-credential-pass-*.linux-amd64", bin = "docker-credential-pass" }
+platforms.macos-arm64 = { asset_pattern = "docker-credential-pass-*.darwin-arm64", bin = "docker-credential-pass" }
+
+[tools.docker-credential-secretservice]
+version = "0.9.3"
+platforms.linux-x64 = { asset_pattern = "docker-credential-secretservice-*.linux-amd64", bin = "docker-credential-secretservice" }
+
+[tools."github:jingkaihe/matchlock"]
+version = "latest"
+platforms.linux-x64 = { asset_pattern = "matchlock-linux-amd64" }
+platforms.macos-arm64 = { asset_pattern = "matchlock-darwin-arm64" }
+
+[tools.guest-init]
+version = "0.2.8"
+platforms.linux-x64 = { asset_pattern = "guest-init-linux-amd64" }
+platforms.macos-arm64 = { asset_pattern = "guest-init-darwin-arm64" }

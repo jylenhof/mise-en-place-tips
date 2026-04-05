@@ -1,0 +1,7 @@
+[tools]
+actionlint = "latest"
+editorconfig-checker = "3.6.1"
+pinact = "latest"
+prek = "0.3.8"
+rumdl = "0.1.66"
+tombi = "0.9.14"
