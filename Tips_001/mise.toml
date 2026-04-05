@@ -10,7 +10,10 @@ platforms.macos-arm64 = { asset_pattern = "docker-credential-pass-*.darwin-arm64
 
 [tools.docker-credential-secretservice]
 version = "0.9.3"
-platforms.linux-x64 = { asset_pattern = "docker-credential-secretservice-*.linux-amd64", bin = "docker-credential-secretservice" }
+
+[tools.docker-credential-secretservice.platforms.linux-x64]
+asset_pattern = "docker-credential-secretservice-*.linux-amd64"
+bin = "docker-credential-secretservice"
 
 [tools."github:jingkaihe/matchlock"]
 version = "latest"
