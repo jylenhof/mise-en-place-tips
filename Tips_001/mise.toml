@@ -1,3 +1,5 @@
+min_version = "2026.04.4"
+
 [tool_alias]
 docker-credential-pass = 'github:docker/docker-credential-helpers[asset_pattern="docker-credentials-pass-*"]'
 docker-credential-secretservice = 'github:docker/docker-credential-helpers[asset_pattern="docker-credential-secretservice-*"]'

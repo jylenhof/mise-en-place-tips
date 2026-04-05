@@ -4,6 +4,9 @@
 
 If a tool is not found in the official mise registry, you can explicitly define how `mise` should find and install it within your `mise.toml` file using github backend. What is important here is that one tool_alias should always have something different from an another one.
 
+> [Note]
+> Don't succeed to handle the line length on line 4... If you had an idea that works, I'm interested.
+
 ## Case 1: One tool has the name of the repo
 
 Use it as a github specified backend... (example here matchlock)
