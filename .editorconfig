@@ -15,3 +15,7 @@ trim_trailing_whitespace = true
 
 [README.md]
 max_line_length = unset
+
+# no solution working yet to limit line length on line 4
+[Tips_001/mise.toml]
+max_line_length = unset
