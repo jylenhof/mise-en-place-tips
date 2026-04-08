@@ -17,5 +17,5 @@ trim_trailing_whitespace = true
 max_line_length = unset
 
 # no solution working yet to limit line length on line 4
-[Tips_001/mise.toml]
+[tips_001/mise.toml]
 max_line_length = unset
