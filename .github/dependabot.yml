@@ -13,3 +13,5 @@ updates:
       deps-external:
         patterns:
           - '*'
+    cooldown:
+      default-days: 7

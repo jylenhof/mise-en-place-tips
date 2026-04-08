@@ -42,4 +42,11 @@ hooks = [
     language = "system",
     files = '\.toml$'
   },
+  {
+    id = "zizmor",
+    name = "zizmor",
+    entry = "zizmor",
+    language = "system",
+    files = '(\.github/(workflows/.*|dependabot.ya?ml))|(action\.ya?ml)$'
+  },
 ]
