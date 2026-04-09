@@ -1,0 +1,21 @@
+[settings]
+experimental = true
+
+[tools]
+terraform = "latest"
+tflint = "latest"
+uv = "latest"
+
+[[hooks.enter]]
+script = '''
+#!/usr/bin/env bash
+if [ -z ${TOOLS_AUTO_UPDATE_DISABLE} ]; then
+  if [ -z ${TOOLS_AUTO_UPDATE_SILENT} ]; then
+    echo "Update local tools"
+    mise upgrade --local
+    echo "End of Update local tools"
+  else
+    mise upgrade --local --quiet
+  fi
+fi
+'''

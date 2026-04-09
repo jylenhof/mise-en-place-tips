@@ -1,0 +1,11 @@
+# tombi: format.rules.table-keys-order = "ascending"
+[tools]
+docker-cli = "latest"
+"github:docker/buildx" = { version = "0.32.0", bin = "docker-buildx" }
+"github:docker/compose" = "latest"
+"github:docker/scout" = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+
+[shell_alias]
+docker = "mise run ./docker.sh"

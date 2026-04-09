@@ -1,8 +1,12 @@
 [tools]
 actionlint = "latest"
 editorconfig-checker = "3.6.1"
+ghalint = "latest"
 pinact = "latest"
 prek = "0.3.8"
 rumdl = "0.1.66"
-tombi = "0.9.14"
+tombi = "0.9.16"
+uv = "latest"  # for pipx:yamllint
+yamlfmt = "latest"
+yamllint = "latest"
 zizmor = "latest"
