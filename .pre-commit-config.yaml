@@ -1,48 +1,110 @@
 ---
 fail_fast: false
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
 repos:
+  - repo: https://github.com/commit-check/commit-check
+    rev: v2.10.1
+    hooks:
+      - id: check-message
+      - id: check-branch
+      - id: check-author-name
+      - id: check-author-email
   - repo: builtin
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-symlinks
-      - id: detect-private-key
-      - id: check-shebang-scripts-are-executable
       - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
       - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
   - repo: local
     hooks:
+      # hooks to use on all my projects
+      - id: editorconfig-checker # editorconfig-checker config
+        name: editorconfig-checker
+        entry: ec
+        language: system
+      - id: rumdl # markdown linter
+        name: rumdl
+        entry: "rumdl check"
+        language: system
+        files: '\.md$'
+      - id: shellcheck # shell linter
+        name: "shellcheck"
+        entry: "shellcheck"
+        language: system
+        files: '\.(sh|bash)$'
+      - id: shfmt # shell formatter
+        name: "shfmt"
+        entry: "shfmt"
+        language: system
+        files: '\.(sh|bash)$'
+      - id: tombi-format # toml formatter
+        name: "tombi format"
+        entry: "tombi format"
+        language: system
+        files: '\.toml$'
+      - id: tombi-lint # toml linter
+        name: "tombi lint"
+        entry: "tombi lint"
+        language: system
+        files: '\.toml$'
+      - id: yamlfmt
+        name: yamlfmt
+        entry: "yamlfmt"
+        language: system
+        files: '\.(yml|yaml)$'
+      - id: yamllint
+        name: yamllint
+        entry: "yamllint"
+        language: system
+        files: '\.(yml|yaml)$'
+
+      # github actions and workflows
+      - id: action-validator
+        name: action-validator
+        entry: action-validator
+        language: system
+        files: '\.github/workflows/.*\.(yaml|yml)$'
       - id: actionlint
         name: actionlint
         entry: actionlint
         language: system
         files: '\.github/workflows/.*\.(yaml|yml)$'
-      - id: editorconfig-checker
-        name: editorconfig-checker
-        entry: ec
-        language: system
-      - id: pinact
-        name: pinact
-        entry: "pinact run"
+      #  pinact does not handle branch version
+      # - id: pinact
+      #  name: pinact
+      #  entry: "pinact run -u --min-age 7 --verify-comment" # verify-comment does not handle branch version
+      #  language: system
+      #  files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
+      #  pass_filenames: false
+      #  gh-action pulse is not fast enough to be used in prek
+      #- id: gh-action-pulse
+      #  name: gh-action-pulse
+      #  entry: "uv run --frozen gh-action-pulse --min-age 7"
+      #  language: system
+      #  files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
+      #  pass_filenames: false
+      - id: ghalint
+        name: ghalint
+        entry: "ghalint run"
         language: system
         files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
-      - id: rumdl
-        name: rumdl
-        entry: "rumdl check"
-        language: system
-        files: '\.md$'
-      - id: tombi-format
-        name: "tombi format"
-        entry: "tombi format"
-        language: system
-        files: '\.toml$'
-      - id: tombi-lint
-        name: "tombi lint"
-        entry: "tombi lint"
-        language: system
-        files: '\.toml$'
       - id: zizmor
         name: zizmor
         entry: zizmor
         language: system
         files: '(\.github/(workflows/.*|actions/.*/action|dependabot\.ya?ml))|(action\.ya?ml)$'
+
+      - id: lychee # markdown link checker
+        name: lychee
+        entry: lychee
+        language: system
+        files: '\.md$'
