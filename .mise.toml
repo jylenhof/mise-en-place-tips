@@ -1,12 +1,22 @@
-[tools]
+#:schema https://mise.jdx.dev/schema/mise.json
+
+[tools]  # tombi: format.rules.table-keys-order = "ascending"
+# tools to use on all my projects
+action-validator = "latest"
 actionlint = "latest"
-editorconfig-checker = "3.6.1"
+editorconfig-checker = "3.7.0"
 ghalint = "latest"
 pinact = "latest"
-prek = "0.3.8"
-rumdl = "0.1.66"
-tombi = "0.9.16"
-uv = "latest"  # for pipx:yamllint
+"pipx:gh-action-pulse" = { version = "latest", uvx = true }
+prek = "0.4.5"
+rumdl = "0.2.18"
+shellcheck = "latest"
+shfmt = "latest"
+tombi = "1.1.3"
+uv = "latest"
 yamlfmt = "latest"
 yamllint = "latest"
 zizmor = "latest"
+
+# To checks links
+lychee = "0.24.2"
