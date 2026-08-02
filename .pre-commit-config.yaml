@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/j178/prek/refs/heads/master/prek.schema.json
 fail_fast: false
 default_install_hook_types:
   - pre-commit
@@ -97,11 +98,18 @@ repos:
         entry: "ghalint run"
         language: system
         files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
+      - id: ghalintaction
+        name: ghalintaction
+        entry: "ghalint run-action"
+        language: system
+        files: '(\.github/actions/.*/action\.ya?ml|action\.ya?ml)$'
       - id: zizmor
         name: zizmor
-        entry: zizmor
+        # limit scope because of bug: https://github.com/zizmorcore/zizmor/issues/2258
+        entry: "zizmor . --collect workflows,actions,dependabot"
         language: system
         files: '(\.github/(workflows/.*|actions/.*/action|dependabot\.ya?ml))|(action\.ya?ml)$'
+        pass_filenames: false
 
       - id: lychee # markdown link checker
         name: lychee
