@@ -1,0 +1,66 @@
+---
+name: mise tool updates
+
+on:
+  schedule:
+    - cron: '15 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: Comma separated tools to upgrade. Leave empty to upgrade all local tools.
+        required: false
+        default: ''
+      keep:
+        description: Comma separated tools to exclude from the upgrade.
+        required: false
+        default: node
+      pull-request-strategy:
+        description: Use single for one PR with all tools, or per-tool for one PR per tool.
+        required: false
+        default: single
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Cleaning up"
+        uses: gacts/run-and-post-run@598d7a875d5620e0457490555b5e18e46082aa47 # v1.4.4
+        with:
+          run: |
+            echo "Pre-Check Cleanup"
+            echo "~/.local" | xargs rm -rf
+          post: |
+            echo "Post-Check Cleanup"
+            echo "~/.local" | xargs rm -rf
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Generate GitHub token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: generate-token
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+
+      - name: Upgrade local mise tools
+        uses: jylenhof/mise-update-tool@2c847ded31353d8e4e70a1b334078d2aa2bc16b9 # v1.0.4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          tools: ${{ inputs.tools || '' }}
+          keep: ${{ inputs.keep || 'node' }}
+          pull-request-strategy: ${{ inputs.pull-request-strategy || 'single' }}
