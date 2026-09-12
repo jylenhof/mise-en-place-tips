@@ -5,9 +5,25 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      mise_cache:
+        description: Override mise-action cache option.
+        required: false
+        type: boolean
+        default: true
+      mise_version:
+        description: Override mise-action version option.
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   prek-checks:
@@ -32,6 +48,10 @@ jobs:
 
       - name: Set up mise
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          cache: ${{ github.event_name == 'workflow_dispatch' && toJSON(inputs.mise_cache) || vars.MISE_CACHE || 'true' }}
+          cache_key_prefix: mise-v1-code-checks.yml
+          version: ${{ inputs.mise_version || vars.MISE_VERSION }}
 
       - name: Run prek checks
         run: prek run --all-files --show-diff-on-failure

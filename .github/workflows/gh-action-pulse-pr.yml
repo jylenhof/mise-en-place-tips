@@ -1,14 +1,10 @@
 ---
-name: gh-action-pulse
+name: gh-action-pulse PR
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize, reopened, ready_for_review]
+  schedule:
+    # Wednesday 12:00 Europe/Paris. GitHub cron is UTC-only: 10:00 UTC during CEST, 11:00 UTC during CET.
+    - cron: '11 10 * * 3'
   workflow_dispatch:
     inputs:
       mise_cache:
@@ -22,16 +18,16 @@ on:
         type: string
         default: ''
 
+concurrency:
+  group: gh-action-pulse-pr
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  gh-action-pulse:
-    name: gh-action-pulse
+  gh-action-pulse-pr:
+    name: gh-action-pulse PR
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -53,6 +49,21 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Pulse the default branch even when this workflow is dispatched from
+          # another ref (for example, to test the workflow file on a PR branch).
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Generate GitHub token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: generate-token
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up mise
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
@@ -60,10 +71,11 @@ jobs:
           MISE_INSTALL_FROM_GITHUB: 1
         with:
           cache: ${{ github.event_name == 'workflow_dispatch' && toJSON(inputs.mise_cache) || vars.MISE_CACHE || 'true' }}
-          cache_key_prefix: mise-v1-gh-action-pulse.yml
+          cache_key_prefix: mise-v1-gh-action-pulse-pr.yml
           version: ${{ inputs.mise_version || vars.MISE_VERSION }}
 
       - name: Run gh-action-pulse
+        id: pulse
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_ACTION_PULSE_LOG_LEVEL: ${{ runner.debug == '1' && 'DEBUG' || 'INFO' }}
@@ -75,8 +87,9 @@ jobs:
           else
             pulse=(gh-action-pulse)
           fi
-          "${pulse[@]}" --dry-run
+          "${pulse[@]}"
           status=$?
+          echo "exit-code=${status}" >> "$GITHUB_OUTPUT"
           if [ "$status" -ne 0 ]; then
             case "$status" in
               2) reason="GitHub authentication failed (GITHUB_TOKEN could not be resolved)" ;;
@@ -86,5 +99,25 @@ jobs:
               *) reason="unexpected failure" ;;
             esac
             echo "::error::gh-action-pulse failed with exit code ${status}: ${reason}."
-            exit "$status"
           fi
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1 # gh-action-pulse: override[max-age=200]
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          commit-message: "chore: update GitHub Actions references"
+          branch: chore/gh-action-pulse
+          base: ${{ github.event.repository.default_branch }}
+          title: "chore: update GitHub Actions references"
+          body: |
+            Automated GitHub Actions reference updates from `gh-action-pulse`.
+          assignees: jylenhof
+          reviewers: jylenhof
+          sign-commits: true
+          delete-branch: true
+
+      - name: Fail on gh-action-pulse errors
+        if: steps.pulse.outputs.exit-code != '0'
+        env:
+          PULSE_EXIT_CODE: ${{ steps.pulse.outputs.exit-code }}
+        run: exit "$PULSE_EXIT_CODE"
