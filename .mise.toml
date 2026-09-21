@@ -7,7 +7,7 @@ actionlint = "1.7.12"
 editorconfig-checker = "4.0.1"
 ghalint = "1.5.6"
 pinact = "5.0.0"
-"pipx:gh-action-pulse" = { version = "1.4.0", uvx = "true" }
+"pipx:gh-action-pulse" = { version = "1.5.0", uvx = "true" }
 prek = "0.5.3"
 rumdl = "0.2.73"
 shellcheck = "0.11.0"
