@@ -1,3 +1,5 @@
+#:tombi toml-version = "v1.1.0"
+
 [settings]
 experimental = true
 
@@ -6,8 +8,8 @@ terraform = "latest"
 tflint = "latest"
 uv = "latest"
 
-[[hooks.enter]]
-script = '''
+[hooks]
+enter = '''
 #!/usr/bin/env bash
 if [ -z ${TOOLS_AUTO_UPDATE_DISABLE} ]; then
   if [ -z ${TOOLS_AUTO_UPDATE_SILENT} ]; then
