@@ -1,6 +1,6 @@
 ---
 # Rule profile: correctness, default or pedantic.
-profile: correctness
+profile: default
 
 self-hosted-runner:
   # Labels of self-hosted runner in array of strings.
