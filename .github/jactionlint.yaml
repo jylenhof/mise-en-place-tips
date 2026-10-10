@@ -2,6 +2,10 @@
 # Rule profile: correctness, default or pedantic.
 profile: default
 
+# Every job must set timeout-minutes (no maximum enforced).
+rules:
+  missing-timeout: error
+
 self-hosted-runner:
   # Labels of self-hosted runner in array of strings.
   labels: []
