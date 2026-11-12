@@ -12,7 +12,9 @@ on:
         required: false
         type: string
         default: ''
-
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
 permissions:
   contents: read
 
@@ -23,10 +25,10 @@ concurrency:
 jobs:
   prek-checks:
     name: Prek Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - name: "Cleaning up"
+      - name: Cleaning up
         uses: gacts/run-and-post-run@fc6503862aba998e2f2123225ad63c09a92ed46e # v1.4.5
         with:
           run: |

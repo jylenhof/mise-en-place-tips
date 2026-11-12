@@ -3,7 +3,7 @@ name: mise tool updates
 
 on:
   schedule:
-    - cron: '30 8 * * 1'
+    - cron: '30 5 * * 1'
   workflow_dispatch:
     inputs:
       tools:
@@ -20,15 +20,25 @@ on:
         type: string
         default: ''
 
+# One run at a time: runs push branches/PRs, so they must not race each other.
+# Never cancel a running upgrade; a newer pending run replaces an older pending one.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
-
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
 jobs:
   upgrade:
-    runs-on: ubuntu-latest
+    name: Upgrade local mise tools
+    runs-on: ubuntu-24.04
+    environment: github-app
     timeout-minutes: 10
     steps:
-      - name: "Cleaning up"
+      - name: Cleaning up
         uses: gacts/run-and-post-run@fc6503862aba998e2f2123225ad63c09a92ed46e # v1.4.5
         with:
           run: |
@@ -57,7 +67,9 @@ jobs:
       - name: Install mise
         uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
-          # uv/pipx backend tools break when restored from the mise cache (jdx/mise#13984)
+          # Cache disabled: tools installed via the uv/pipx backends break
+          # when restored from the mise cache (upstream issue, not fixed yet):
+          # https://github.com/jdx/mise/discussions/13984
           cache: false
           version: ${{ inputs.mise_version || vars.MISE_VERSION }}
 

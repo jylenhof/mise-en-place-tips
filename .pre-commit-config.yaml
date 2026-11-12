@@ -34,51 +34,65 @@ repos:
         language: system
       - id: rumdl # markdown linter
         name: rumdl
-        entry: "rumdl check"
+        entry: rumdl check
         language: system
-        files: '\.md$'
+        files: \.md$
       - id: shellcheck # shell linter
-        name: "shellcheck"
-        entry: "shellcheck"
+        name: shellcheck
+        entry: shellcheck
         language: system
-        files: '\.(sh|bash)$'
+        files: \.(sh|bash)$
       - id: shfmt # shell formatter
-        name: "shfmt"
-        entry: "shfmt"
+        name: shfmt
+        entry: shfmt
         language: system
-        files: '\.(sh|bash)$'
+        files: \.(sh|bash)$
       - id: tombi-format # toml formatter
-        name: "tombi format"
-        entry: "tombi format"
+        name: tombi format
+        entry: tombi format
         language: system
-        files: '\.toml$'
+        files: \.toml$
       - id: tombi-lint # toml linter
-        name: "tombi lint"
-        entry: "tombi lint"
+        name: tombi lint
+        entry: tombi lint
         language: system
-        files: '\.toml$'
-      - id: yamlfmt
-        name: yamlfmt
-        entry: "yamlfmt"
-        language: system
-        files: '\.(yml|yaml)$'
-      - id: yamllint
-        name: yamllint
-        entry: "yamllint"
-        language: system
-        files: '\.(yml|yaml)$'
+        files: \.toml$
+      - id: ryl-check
+        name: ryl check
+        description: Lint YAML files with ryl
+        entry: ryl check
+        language: python
+        types: [yaml]
+      - id: ryl-check-markdown
+        name: ryl check (markdown)
+        description: Lint YAML embedded in Markdown (front matter + fenced yaml blocks)
+        entry: ryl check --markdown
+        language: python
+        files: \.(md|markdown|mdx|qmd|Rmd)$
+      - id: ryl-format
+        name: ryl format
+        description: Format YAML files with ryl
+        entry: ryl format
+        language: python
+        types: [yaml]
+      - id: ryl-format-markdown
+        name: ryl format (markdown)
+        description: Format YAML embedded in Markdown (front matter + fenced yaml blocks)
+        entry: ryl format --markdown
+        language: python
+        files: \.(md|markdown|mdx|qmd|Rmd)$
 
       # github actions and workflows
       - id: action-validator
         name: action-validator
         entry: action-validator
         language: system
-        files: '\.github/workflows/.*\.(yaml|yml)$'
+        files: \.github/workflows/.*\.(yaml|yml)$
       - id: jactionlint
         name: jactionlint
         entry: jactionlint
         language: system
-        files: '\.github/workflows/.*\.(yaml|yml)$'
+        files: \.github/workflows/.*\.(yaml|yml)$
       #  pinact does not handle branch version
       # - id: pinact
       #  name: pinact
@@ -87,7 +101,7 @@ repos:
       #  files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
       #  pass_filenames: false
       #  gh-action pulse is not fast enough to be used in prek
-      #- id: gh-action-pulse
+      # - id: gh-action-pulse
       #  name: gh-action-pulse
       #  entry: "uv run --frozen gh-action-pulse --min-age 7"
       #  language: system
@@ -95,23 +109,23 @@ repos:
       #  pass_filenames: false
       - id: ghalint
         name: ghalint
-        entry: "ghalint run"
+        entry: ghalint run
         language: system
-        files: '\.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$'
+        files: \.github/(workflows/.*|actions/.*/action)\.(yaml|yml)$
       - id: ghalintaction
         name: ghalintaction
-        entry: "ghalint run-action"
+        entry: ghalint run-action
         language: system
-        files: '(\.github/actions/.*/action\.ya?ml|action\.ya?ml)$'
+        files: (\.github/actions/.*/action\.ya?ml|action\.ya?ml)$
       - id: zizmor
         name: zizmor
-        entry: "zizmor ."
+        entry: zizmor .
         language: system
-        files: '(\.github/(workflows/.*|actions/.*/action|dependabot\.ya?ml))|(action\.ya?ml)$'
+        files: (\.github/(workflows/.*|actions/.*/action|dependabot\.ya?ml))|(action\.ya?ml)$
         pass_filenames: false
 
       - id: lychee # markdown link checker
         name: lychee
         entry: lychee
         language: system
-        files: '\.md$'
+        files: \.md$
