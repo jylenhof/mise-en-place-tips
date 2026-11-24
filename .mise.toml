@@ -15,7 +15,7 @@ shellcheck = "0.11.0"
 shfmt = "3.14.1"
 tombi = "1.11.2"
 uv = "0.13.9"
-zizmor = "1.32.0"
+zizmor = "1.33.1"
 
 # To checks links
 lychee = "0.24.2"
